@@ -1,14 +1,63 @@
-import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, Image, Dimensions, Alert } from 'react-native'
+import React, { useState } from 'react'
 import { Layout } from '@ui-kitten/components'
 import { TextInput } from '@react-native-material/core'
 import Logo from '../../../assets/logo.png'
 import WhatsIcon from '../../../assets/whats-app.svg'
+import axiosClient from '../../api/axios-client'
+
 
 const win = Dimensions.get('window')
 const ratio = win.width / 541; //541 is actual image width
 
 const Register = ({ navigation }) => {
+    const [name, setName] = useState('')
+    const [mobileNumber, setMobileNumber] = useState('')
+    const [password, setPassword] = useState('')
+
+    const [loding, setLoading] = useState(false)
+
+    // const { makeRequest } = useRequest()
+
+    const onPress = () => {
+
+        axiosClient()
+            .post('user/register', {
+                "firstName": name,
+                "lastName": "Kumar",
+                "email": "Sunil.Kumar@truworth.com",
+                "mobile": mobileNumber,
+                "password": password
+            },
+                {
+                    headers: 'Content-Type: application/json',
+                }
+            ).then(async res => {
+                const { } = res.data
+                console.log(res.data);
+            }).catch(err => {
+                Alert.alert('The Reddy Anna', err.response.data.message)
+            })
+
+        // makeRequest({
+        //     url: `localhost:5000/api/user/register`,
+        //     method: 'POST',
+        //     body: {
+        //         "firstName": "Anil",
+        //         "lastName": "Kumar",
+        //         "email": "Anil.Kumar@truworth.com",
+        //         "mobile": "9057921046",
+        //         "password": "Truworth@123"
+        //     },
+        //     onSuccess: data => {
+        //         console.log(data.response);
+        //     },
+        //     onFailure: err => {
+        //         console.log(err);
+        //     }
+        // })
+    }
+
     return (
         <Layout style={{ flex: 1, backgroundColor: '#000' }}>
             <View style={{ backgroundColor: '#000', padding: 20 }}>
@@ -66,7 +115,12 @@ const Register = ({ navigation }) => {
 
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    style={{ backgroundColor: '#d8b664', alignItems: 'center', padding: 12, borderRadius: 4, margin: 8 }}
+                    style={{
+                        backgroundColor: '#d8b664',
+                        alignItems: 'center', padding: 12,
+                        borderRadius: 4, margin: 8
+                    }}
+                    onPress={() => onPress()}
                 >
                     <Text style={{ fontSize: 14, fontWeight: '400', color: '#000' }}>CONFIRM</Text>
                 </TouchableOpacity>
